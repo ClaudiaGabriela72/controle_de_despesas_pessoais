@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import Tk, ttk
 import PIL
+import PIL.Image
 
 
 # cores
@@ -39,12 +40,11 @@ frameBaixo.grid(row=2, column=0,pady=0, padx=10, sticky=NSEW)
 
 # Frame cima
 
-root = Tk()
 global app_img
 app_img = Image("icons8-usuário-do-bloco-de-notas-50.png")
 app_img = app_img.resize((45,45))
-app_img = Tk.PhotoImage(app_img, master=root)
-Label(root, image=app_img)
+app_img = Tk.PhotoImage(app_img)
+
 
 
 app_logo = Label(frameCima, image=app_img, text="Orçamento pessoal", width=900, compound=LEFT, padx=5, relief=RAISED, anchor=NW, font=('Verdana 20 bold'), bg=co1, fg=co4)
