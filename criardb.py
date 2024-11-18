@@ -18,4 +18,4 @@ with con:
  # criando tabela de gastos
 with con:
     cur = con.cursor()
-    cur.execute('CREATE TABLE Gastos(id INTEGER PRIMARY KEY AUTOINCREMENT,categoria TEXT, adicionando_em DATE, retirado_em DATE, valor DECIMAl)')
+    cur.execute('CREATE TABLE Gastos(id INTEGER PRIMARY KEY AUTOINCREMENT,categoria TEXT, retirado_em DATE, valor DECIMAl)')
