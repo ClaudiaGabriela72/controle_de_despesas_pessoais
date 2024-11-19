@@ -46,6 +46,9 @@ frameMeio.grid(row=1, column=0, pady=1,padx=0, sticky=NSEW)
 frameBaixo  = Frame(janela, width=1043, height=300, bg=co1, relief='flat')
 frameBaixo.grid(row=2, column=0,pady=0, padx=10, sticky=NSEW)
 
+frame_gra_pie = Frame(frameMeio, width=580, height=250, bg=co2)
+frame_gra_pie.place(x=415, y=5)
+
 # Frame cima
 global app_img
 
@@ -119,6 +122,56 @@ def grafico_bar():
     canva.get_tk_widget().place(x=10, y=70)
 
 
+# função de resumo total
+def resumo():
+    valor = [500, 600, 400]
+
+    l_linha = Label(frameMeio, text='', width=215, height=1, anchor=NW, font=('Arial 1'), bg='#545454')
+    l_linha.place(x=309, y=52)
+    l_sumario = Label(frameMeio, text='Total Renda Mensal      '.upper(), anchor=NW, font=('Verdana 12'), bg=co1, fg='#83a9e6')
+    l_sumario.place(x=309, y=35)
+    l_sumario = Label(frameMeio, text='R$ {:,.2f}'.format(valor[0]), anchor=NW, font=('Arial 17'), bg=co1, fg='#545454')
+    l_sumario.place(x=309, y=70)
+
+    l_linha = Label(frameMeio, text='', width=215, height=1, anchor=NW, font=('Arial 1'), bg='#545454')
+    l_linha.place(x=309, y=132)
+    l_sumario = Label(frameMeio, text='Total Despesas Mensais   '.upper(), anchor=NW, font=('Verdana 12'), bg=co1, fg='#83a9e6')
+    l_sumario.place(x=309, y=115)
+    l_sumario = Label(frameMeio, text='R$ {:,.2f}'.format(valor[1]), anchor=NW, font=('Arial 17'), bg=co1, fg='#545454')
+    l_sumario.place(x=309, y=150)
+
+    l_linha = Label(frameMeio, text='', width=215, height=1, anchor=NW, font=('Arial 1'), bg='#545454')
+    l_linha.place(x=309, y=207)
+    l_sumario = Label(frameMeio, text='Total Saldo Da Caixa      '.upper(), anchor=NW, font=('Verdana 12'), bg=co1, fg='#83a9e6')
+    l_sumario.place(x=309, y=190)
+    l_sumario = Label(frameMeio, text='R$ {:,.2f}'.format(valor[2]), anchor=NW, font=('Arial 17'), bg=co1, fg='#545454')
+    l_sumario.place(x=309, y=220)
+
+
+# função grafico pie
+def grafico_pie():
+    figura = plt.Figure(figsize=(5,3), dpi=90)
+    ax = figura.add_subplot(111)
+
+    lista_valores = [345, 225, 534]
+    lista_categorias = ['Renda','Despesa','Saldo']
+
+
+    explode = []
+    for i in lista_categorias:
+        explode.append(0.05)
+
+    ax.pie(lista_valores, explode=explode, wedgeprops=dict(width=0.2), autopct='%1.1f%%', colors=colors, shadow=True, startangle=90)
+    ax.legend(lista_categorias, loc='center right', bbox_to_anchor=(1.55, 0.50))
+
+
+    canva_categoria = FigureCanvasTkAgg(figura, frame_gra_pie)
+    canva_categoria.get_tk_widget().grid(row=0, column=0)
+
+
 percentagem()   
 grafico_bar()
+resumo()
+grafico_pie()
+
 janela.mainloop()
