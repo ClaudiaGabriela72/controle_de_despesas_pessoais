@@ -5,10 +5,11 @@ import sqlite3 as lite
 
 con = lite.connect('dados.db')
 #Inserir categoria 
-with con:
-    cur = con.cursor()
-    query = "INSERT INTO Categoria (nome) VALUES (?)"
-    cur.execute(query, ['Alimentaçao'])
+def inserir_categoria(i):
+    with con:
+        cur = con.cursor()
+        query = "INSERT INTO Categoria (nome) VALUES (?)"
+        cur.execute(query, i)
 
 
 #Inserir Receitas
@@ -20,7 +21,7 @@ def inserir_receita(i):
 
 
 #Inserir Gastos
-def inserir_receita(i):
+def inserir_gasto(i):
     with con:
         cur = con.cursor()
         query = "INSERT INTO Gastos (categoria, retirado_em,valor) VALUES (?,?,?)"
@@ -85,3 +86,25 @@ def ver_gastos():
             
     return lista_itens
 
+def tabela():
+    gastos = ver_gastos()
+    receitas = ver_receitas()
+
+    tabela_lista = []
+
+    for i in gastos:
+        tabela_lista.append(i)
+
+    for i in receitas:
+        tabela_lista.append(i)
+
+    return tabela_lista
+
+
+def bar_valores():
+    receitas = ver_receitas()
+    receitas_lista = []
+
+
+    for i in receitas:
+        receitas_lista.append(i[3])
