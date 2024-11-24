@@ -108,7 +108,7 @@ def bar_valores():
     for i in receitas:
         receitas_lista.append(i[3])
     
-    #receitas_lista = [float(valor) for valor in receitas_lista if valor.isdigit()]
+   
     receita_total = sum(receitas_lista)
 
     gastos = ver_gastos()
@@ -151,7 +151,7 @@ def porcentagem_valores():
     for i in receitas:
         receitas_lista.append(i[3])
     
-    #receitas_lista = [float(valor) for valor in receitas_lista if valor.isdigit()]
+    
     receita_total = sum(receitas_lista)
 
     gastos = ver_gastos()
@@ -166,62 +166,3 @@ def porcentagem_valores():
     total = ((receita_total - gastos_total)/ receita_total) * 100
 
     return [total]
-'''
-with con:
-    cur = con.cursor()
-    cur.execute("SELECT * FROM Receitas")
-    for row in cur.fetchall():
-        print(row)
-
-
-import sqlite3
-
-# Conectando ao banco de dados
-con = sqlite3.connect('seu_banco_de_dados.db')
-
-with con:
-    cur = con.cursor()
-    cur.execute("PRAGMA table_info(Receitas);")
-    tabela_info = cur.fetchall()
-
-# Exibindo as informações da tabela
-for coluna in tabela_info:
-    print(coluna)
-
-cur.execute("PRAGMA table_info(Receitas);")
-tabela_info = cur.fetchall()
-for coluna in tabela_info:
-    print(coluna)
-
-
-with con:
-    cur = con.cursor()
-    
-    # Renomear a tabela original
-    cur.execute("ALTER TABLE Receitas RENAME TO Receitas_temp;")
-    
-    # Criar a nova tabela com a estrutura correta
-    cur.execute("""
-        CREATE TABLE Receitas (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            categoria TEXT,
-            adicionado_em DATE,
-            valor DECIMAL
-        );
-    """)
-    
-    # Migrar os dados da tabela antiga para a nova tabela
-    cur.execute("""
-        INSERT INTO Receitas (id, categoria, adicionado_em, valor)
-        SELECT id, categoria, adicionado_em, valor FROM Receitas_temp;
-    """)
-    
-    # Remover a tabela temporária
-    cur.execute("DROP TABLE Receitas_temp;")
-
-print("Estrutura corrigida com sucesso!")
-
-
-with con:
-    cur = con.cursor()
-    cur.execute("UPDATE Receitas SET adicionado_em = DATE(adicionado_em) WHERE adicionado_em IS NOT NULL")'''

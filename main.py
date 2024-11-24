@@ -15,7 +15,7 @@ from matplotlib.figure import Figure
 from tkcalendar import Calendar, DateEntry
 from datetime import datetime
 
-from view import   inserir_categoria, ver_categoria,inserir_receita, inserir_gasto, tabela, bar_valores, pie_valores, porcentagem_valores, deletar_gastos, deletar_receitas#porcentagem_valores,bar_valores,pie_valores, inserir_receita, inserir_gasto,
+from view import   inserir_categoria, ver_categoria,inserir_receita, inserir_gasto, tabela, bar_valores, pie_valores, porcentagem_valores, deletar_gastos, deletar_receitas
 
 
 # cores
@@ -63,96 +63,7 @@ app_img = ImageTk.PhotoImage(img)
 app_logo = Label(frameCima, image=app_img, text="Orçamento pessoal", width=900, compound=LEFT, padx=5, relief=RAISED, anchor=NW, font=('Verdana 20 bold'), bg=co1, fg=co4)
 app_logo.place(x=7, y=5)
 
-'''global tree
 
-def inserir_receitas_b():
-    categoria = 'Receita'  # Nome fixo ou dinâmico, dependendo do contexto
-    data = e_cal_receitas.get()
-    try:
-        valor = float(e_valor_receitas.get())  # Convertendo para número decimal
-    except ValueError:
-        messagebox.showerror('Erro', 'Valor inválido. Digite um número na quantia.')
-        return
-
-    # Verificando se os campos estão preenchidos
-    if not data or not valor:
-        messagebox.showerror('Erro', 'Preencha todos os campos.')
-        return
-
-    # Inserindo os valores no banco
-    inserir_receita((categoria, data, valor))
-
-    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso.')
-
-    # Limpando os campos de entrada
-    e_cal_receitas.delete(0, 'end')
-    e_valor_receitas.delete(0, 'end')
-
-    # Atualizando os dados na interface
-    mostrar_renda()
-    percentagem()
-    grafico_bar()
-    resumo()
-    grafico_pie()
-
-#def inserir_receitas_b():
-    nome = 'Receita'
-    data = e_cal_receitas.get()
-    quantia = e_valor_receitas.get()
-
-    lista_inserir = [nome, data, quantia]
-
-    for i in lista_inserir:
-        if i =='':
-            messagebox.showerror('Erro','Preencha todos os campos')
-            return
-      
-    inserir_receita(lista_inserir)
-
-    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
-
-    #combo_categoria_despesas.delete(0,'end')
-    e_cal_receitas.delete(0,'end')
-    e_valor_receitas.delete(0,'end')
-
-     
-      # atualizando dados
-    mostrar_renda()
-    percentagem()
-    grafico_bar()
-    resumo()
-    grafico_pie()
-
-
-
-# funçao inserir Despesas
-def inserir_despesas_b():
-    nome = combo_categoria_despesas.get()
-    data = e_cal_despesas.get()
-    quantia = e_valor_despesas.get()
-
-    lista_inserir = [nome, data, quantia]
-
-    for i in lista_inserir:
-        if i =='':
-            messagebox.showerror('Erro','Preencha todos os campos')
-            return
-      
-    inserir_gasto(lista_inserir)
-
-    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
-
-    combo_categoria_despesas.delete(0,'end')
-    e_cal_despesas.delete(0,'end')
-    e_valor_despesas.delete(0,'end')
-
-    # atualizando dados
-    mostrar_renda()
-    percentagem()
-    grafico_bar()
-    resumo()
-    grafico_pie()
-'''
 
 # funçao deletar
 def deletar_dados():
@@ -230,12 +141,12 @@ def inserir_receitas_b():
 
     # Obtendo e validando o valor
     try:
-        valor = float(e_valor_receitas.get())  # Convertendo para número decimal
+        valor = float(e_valor_receitas.get())  
     except ValueError:
         messagebox.showerror('Erro', 'Valor inválido. Digite um número na quantia.')
         return
 
-    # Verificando se os campos estão preenchidos
+    
     if not data_formatada or not valor:
         messagebox.showerror('Erro', 'Preencha todos os campos.')
         return
