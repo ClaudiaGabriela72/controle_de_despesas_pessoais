@@ -12,7 +12,7 @@ with con:
  # criando tabela de receitas
 with con:
     cur = con.cursor()
-    cur.execute('CREATE TABLE Receitas(id INTEGER PRIMARY KEY AUTOINCREMENT,categoria TEXT, adicionando_em DATE, adicionado_em DATE, valor DECIMAl)')
+    cur.execute('CREATE TABLE Receitas(id INTEGER PRIMARY KEY AUTOINCREMENT,categoria TEXT, adicionando_em DATE, valor DECIMAl)')
 
 
  # criando tabela de gastos

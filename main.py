@@ -13,9 +13,9 @@ from matplotlib.figure import Figure
 
 
 from tkcalendar import Calendar, DateEntry
-from datetime import date
+from datetime import datetime
 
-from view import  bar_valores, inserir_receita, inserir_gasto, inserir_categoria, ver_categoria
+from view import   inserir_categoria, ver_categoria,inserir_receita, inserir_gasto, tabela, bar_valores, pie_valores, porcentagem_valores, deletar_gastos, deletar_receitas#porcentagem_valores,bar_valores,pie_valores, inserir_receita, inserir_gasto,
 
 
 # cores
@@ -34,6 +34,7 @@ colors = ['#5588bb', '#66bbbb','#99bb55', '#ee9944', '#444466', '#bb5555']
 
 # criando janela
 janela = Tk()
+janela.title()
 janela.geometry('900x650')
 janela.configure(background=co9)
 janela.resizable(width=FALSE, height=FALSE)
@@ -52,8 +53,6 @@ frameMeio.grid(row=1, column=0, pady=1,padx=0, sticky=NSEW)
 frameBaixo  = Frame(janela, width=1043, height=300, bg=co1, relief='flat')
 frameBaixo.grid(row=2, column=0,pady=0, padx=10, sticky=NSEW)
 
-frame_gra_pie = Frame(frameMeio, width=580, height=250, bg=co2)
-frame_gra_pie.place(x=415, y=5)
 
 # Frame cima
 global app_img
@@ -64,7 +63,132 @@ app_img = ImageTk.PhotoImage(img)
 app_logo = Label(frameCima, image=app_img, text="Orçamento pessoal", width=900, compound=LEFT, padx=5, relief=RAISED, anchor=NW, font=('Verdana 20 bold'), bg=co1, fg=co4)
 app_logo.place(x=7, y=5)
 
-global tree
+'''global tree
+
+def inserir_receitas_b():
+    categoria = 'Receita'  # Nome fixo ou dinâmico, dependendo do contexto
+    data = e_cal_receitas.get()
+    try:
+        valor = float(e_valor_receitas.get())  # Convertendo para número decimal
+    except ValueError:
+        messagebox.showerror('Erro', 'Valor inválido. Digite um número na quantia.')
+        return
+
+    # Verificando se os campos estão preenchidos
+    if not data or not valor:
+        messagebox.showerror('Erro', 'Preencha todos os campos.')
+        return
+
+    # Inserindo os valores no banco
+    inserir_receita((categoria, data, valor))
+
+    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso.')
+
+    # Limpando os campos de entrada
+    e_cal_receitas.delete(0, 'end')
+    e_valor_receitas.delete(0, 'end')
+
+    # Atualizando os dados na interface
+    mostrar_renda()
+    percentagem()
+    grafico_bar()
+    resumo()
+    grafico_pie()
+
+#def inserir_receitas_b():
+    nome = 'Receita'
+    data = e_cal_receitas.get()
+    quantia = e_valor_receitas.get()
+
+    lista_inserir = [nome, data, quantia]
+
+    for i in lista_inserir:
+        if i =='':
+            messagebox.showerror('Erro','Preencha todos os campos')
+            return
+      
+    inserir_receita(lista_inserir)
+
+    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+
+    #combo_categoria_despesas.delete(0,'end')
+    e_cal_receitas.delete(0,'end')
+    e_valor_receitas.delete(0,'end')
+
+     
+      # atualizando dados
+    mostrar_renda()
+    percentagem()
+    grafico_bar()
+    resumo()
+    grafico_pie()
+
+
+
+# funçao inserir Despesas
+def inserir_despesas_b():
+    nome = combo_categoria_despesas.get()
+    data = e_cal_despesas.get()
+    quantia = e_valor_despesas.get()
+
+    lista_inserir = [nome, data, quantia]
+
+    for i in lista_inserir:
+        if i =='':
+            messagebox.showerror('Erro','Preencha todos os campos')
+            return
+      
+    inserir_gasto(lista_inserir)
+
+    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+
+    combo_categoria_despesas.delete(0,'end')
+    e_cal_despesas.delete(0,'end')
+    e_valor_despesas.delete(0,'end')
+
+    # atualizando dados
+    mostrar_renda()
+    percentagem()
+    grafico_bar()
+    resumo()
+    grafico_pie()
+'''
+
+# funçao deletar
+def deletar_dados():
+    try:
+        treev_dados= tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        treev_lista = treev_dicionario['values']
+        valor = treev_lista[0]
+        nome = treev_lista[1]
+
+        if nome == 'Receita':
+            deletar_receitas([valor])
+            messagebox.showinfo('Sucesso','Os dados foram deletados com sucesso')
+
+
+            # atualizando dados
+            mostrar_renda()
+            percentagem()
+            grafico_bar()
+            resumo()
+            grafico_pie()
+        else:
+            deletar_gastos([valor])
+            messagebox.showinfo('Sucesso','Os dados foram deletados com sucesso')
+
+
+            # atualizando dados
+            mostrar_renda()
+            percentagem()
+            grafico_bar()
+            resumo()
+            grafico_pie()
+
+    except IndexError:
+        messagebox.showerror('Erro','Seleciona um dos dados na tabela')
+
 
 def inserir_categoria_b():
     nome = e_categoria.get()
@@ -72,18 +196,15 @@ def inserir_categoria_b():
     lista_inserir = [nome]
 
     for i in lista_inserir:
-        if i =='':
+        if i=='':
             messagebox.showerror('Erro','Preencha todos os campos')
             return
 
-
     inserir_categoria(lista_inserir)
 
-
-    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')  
+    messagebox.showinfo('Sucesso','Os dados foram inseridos com sucesso')
 
     e_categoria.delete(0,'end')
-
 
     categoria_funcao = ver_categoria()
     categoria = []
@@ -91,28 +212,99 @@ def inserir_categoria_b():
     for i in categoria_funcao:
         categoria.append(i[1])
     
-    # atualizando a lista de categorias
     combo_categoria_despesas['values'] = (categoria)
 
 
 
 
-# Porcentagem
+def inserir_receitas_b():
+    categoria = 'Receita'  # Nome fixo ou dinâmico, dependendo do contexto
 
+    # Obtendo e formatando a data
+    data_selecionada = e_cal_receitas.get()
+    try:
+        data_formatada = datetime.strptime(data_selecionada, '%d/%m/%Y').strftime('%Y-%m-%d')
+    except ValueError:
+        messagebox.showerror('Erro', 'Data inválida. Escolha uma data válida.')
+        return
+
+    # Obtendo e validando o valor
+    try:
+        valor = float(e_valor_receitas.get())  # Convertendo para número decimal
+    except ValueError:
+        messagebox.showerror('Erro', 'Valor inválido. Digite um número na quantia.')
+        return
+
+    # Verificando se os campos estão preenchidos
+    if not data_formatada or not valor:
+        messagebox.showerror('Erro', 'Preencha todos os campos.')
+        return
+
+    # Inserindo os valores no banco
+    inserir_receita((categoria, data_formatada, valor))
+
+    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso.')
+
+    # Limpando os campos de entrada
+    e_valor_receitas.delete(0, 'end')
+
+    # Atualizando os dados na interface
+    mostrar_renda()
+    percentagem()
+    grafico_bar()
+    resumo()
+    grafico_pie()
+
+
+    print(f"Categoria: {categoria}")
+    print(f"Data: {data_formatada}")
+    print(f"Valor: {valor}")
+
+    inserir_receita(('Receita', '2024-11-24', 400.0))
+
+
+
+def inserir_despesas_b():
+    nome = combo_categoria_despesas.get()
+    data = e_cal_despesas.get()
+    quantia = e_valor_despesas.get()
+
+    lista_inserir = [nome, data, quantia]
+
+    for i in lista_inserir:
+        if i =='':
+            messagebox.showerror('Erro','Preencha todos os campos')
+            return
+      
+    inserir_gasto(lista_inserir)
+
+    messagebox.showinfo('Sucesso', 'Os dados foram inseridos com sucesso')
+
+    combo_categoria_despesas.delete(0,'end')
+    e_cal_despesas.delete(0,'end')
+    e_valor_despesas.delete(0,'end')
+
+    # atualizando dados
+    mostrar_renda()
+    percentagem()
+    grafico_bar()
+    resumo()
+    grafico_pie()
+# Porcentagem
 def percentagem():
-    l_nome = Label(frameMeio, text="Porcentagem da receita gasta", height=1, anchor=NW, font=('Verdana 12'), bg=co1, fg=co4)
+    l_nome = Label(frameMeio, text="Porcentagem da receita restante", height=1, anchor=NW, font=('Verdana 12'), bg=co1, fg=co4)
     l_nome.place(x=7, y=5)
 
     style = ttk.Style()
     style.theme_use('default')
     style.configure('back.Horizontal.TProgressbar', backgroung='#daed6b')
-    style.configure('TProgressbar', thickness=20)
+    style.configure('TProgressbar', thickness=25)
 
     bar = Progressbar(frameMeio, length=180, style='black.Horizontal.TProgressbar')
     bar.place(x=10, y=35)
-    bar['value'] = 50
+    bar['value'] = porcentagem_valores()[0]
 
-    valor = 50
+    valor = porcentagem_valores()[0]
 
     l_percentagem = Label(frameMeio, text="{:,.2f}%".format(valor), anchor=NW, font=('Verdana 12'), bg=co1, fg=co4)
     l_percentagem.place(x=200, y=35)
@@ -121,7 +313,7 @@ def percentagem():
 # Funçao para grafico
 def grafico_bar():
     lista_categorias = ['Renda', 'Despesas', 'Saldo']
-    lista_valores = [3000, 2000, 6236]
+    lista_valores = bar_valores()
 
 
     #fazendo figura e atribuindo objestos de eixo
@@ -134,7 +326,7 @@ def grafico_bar():
 
     for i in ax.patches:
         ax.text(i.get_x()-.001, i.get_height()+.5,
-        str("{:,.0f}".format(lista_valores[c])), fontsize=17, fontstyle='italic', verticalalignment='bottom',)
+            str("{:,.0f}".format(lista_valores[c])), fontsize=17, fontstyle='italic', verticalalignment='bottom',)
         c += 1
     
     ax.set_xticklabels(lista_categorias, fontsize=16)
@@ -162,7 +354,7 @@ def grafico_bar():
 
 # função de resumo total
 def resumo():
-    valor = [500, 600, 400]
+    valor = bar_valores()
 
     l_linha = Label(frameMeio, text='', width=215, height=1, anchor=NW, font=('Arial 1'), bg='#545454')
     l_linha.place(x=309, y=52)
@@ -185,14 +377,16 @@ def resumo():
     l_sumario = Label(frameMeio, text='R$ {:,.2f}'.format(valor[2]), anchor=NW, font=('Arial 17'), bg=co1, fg='#545454')
     l_sumario.place(x=309, y=220)
 
+frame_gra_pie = Frame(frameMeio, width=580, height=250, bg=co2)
+frame_gra_pie.place(x=415, y=5)
 
 # função grafico pie
 def grafico_pie():
     figura = plt.Figure(figsize=(5,3), dpi=90)
     ax = figura.add_subplot(111)
 
-    lista_valores = [345, 225, 534]
-    lista_categorias = ['Renda','Despesa','Saldo']
+    lista_valores = pie_valores()[1]
+    lista_categorias = pie_valores()[0]
 
 
     explode = []
@@ -205,7 +399,6 @@ def grafico_pie():
 
     canva_categoria = FigureCanvasTkAgg(figura, frame_gra_pie)
     canva_categoria.get_tk_widget().grid(row=0, column=0)
-
 
 percentagem()   
 grafico_bar()
@@ -231,7 +424,7 @@ app_tabela.place(x=5, y=309)
 def mostrar_renda():
     tabela_head = ['#Id', 'Categoria', 'Data', 'Quantia']
 
-    lista_itens = [[0,2,3,4],[0,2,3,4],[0,2,3,4],[0,2,3,4]]
+    lista_itens = tabela()
 
     global tree
 
@@ -264,16 +457,17 @@ def mostrar_renda():
 
 mostrar_renda()
 
+
 # Configuracoes Despesas
-l_descricao = Label(frame_operacoes, text='Insira novas despesas', height=1, anchor=NW, font=('Verdana 10 bold'), bg=co1, fg=co4)
-l_descricao.place(x=10, y=10)
+l_info = Label(frame_operacoes, text='Insira novas despesas', height=1, anchor=NW, font=('Verdana 10 bold'), bg=co1, fg=co4)
+l_info.place(x=10, y=10)
 
 # categorias
 l_categoria = Label(frame_operacoes, text='Categoria', height=1, anchor=NW, font=('Verdana 10'), bg=co1, fg=co4)
 l_categoria.place(x=10, y=40)
 
 # Pegando categorias
-categoria_funcao = ['Viagem','Comida']
+categoria_funcao = ver_categoria()
 categoria = []
 
 for i in categoria_funcao:
@@ -282,6 +476,7 @@ for i in categoria_funcao:
 combo_categoria_despesas = ttk.Combobox(frame_operacoes, width=10, font=('Ivy 10'))
 combo_categoria_despesas['values'] = (categoria)
 combo_categoria_despesas.place(x=110, y=41)
+
 
 l_cal_despesas = Label(frame_operacoes, text='Data', height=1, anchor=NW, font=('Ivy 10'), bg=co1, fg=co4)
 l_cal_despesas.place(x=10, y=70)
@@ -293,12 +488,13 @@ l_valor_despesas.place(x=10, y=100)
 e_valor_despesas = Entry(frame_operacoes, width=11, justify='left', relief='solid')
 e_valor_despesas.place(x=110, y=101)
 
+
 # Botao inserir
 img_add_despesas = Image.open("adiciona.png")
 img_add_despesas = img_add_despesas.resize((17,17))
 img_add_despesas = ImageTk.PhotoImage(img_add_despesas)
 
-botao_inserir_despesas = Button(frame_operacoes, image=img_add_despesas, text="Adicionar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE)
+botao_inserir_despesas = Button(frame_operacoes,command=inserir_despesas_b, image=img_add_despesas, text="Adicionar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE) #command=inserir_despesas_b
 botao_inserir_despesas.place(x=110, y=131)
 
 # Botao Excluir
@@ -308,13 +504,12 @@ l_valor_despesas.place(x=10, y=190)
 img_add_deletar = Image.open("icons8-apagar.png")
 img_add_deletar = img_add_deletar.resize((17,17))
 img_add_deletar = ImageTk.PhotoImage(img_add_deletar)
-
-botao_deletar = Button(frame_operacoes, image=img_add_deletar, text="Deletar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE)
+botao_deletar = Button(frame_operacoes, image=img_add_deletar, text="Deletar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE) #command=deletar_dados
 botao_deletar.place(x=110, y=190)
 
 # configurando receitas
-l_descricao = Label(frame_configuracao, text='Insira novas receitas', height=1, anchor=NW, font=('Verdana 10 bold'), bg=co1, fg=co4)
-l_descricao.place(x=10, y=10)
+l_info = Label(frame_configuracao, text='Insira novas receitas', height=1, anchor=NW, font=('Verdana 10 bold'), bg=co1, fg=co4)
+l_info.place(x=10, y=10)
 
 # calendario
 l_cal_receitas = Label(frame_configuracao, text='Data', height=1, anchor=NW, font=('Ivy 10'), bg=co1, fg=co4)
@@ -330,12 +525,11 @@ e_valor_receitas.place(x=110, y=71)
 img_add_receitas = Image.open("adiciona.png")
 img_add_receitas = img_add_receitas.resize((17,17))
 img_add_receitas = ImageTk.PhotoImage(img_add_receitas)
-
-botao_inserir_receitas = Button(frame_configuracao, image=img_add_receitas, text="Adicionar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE)
+botao_inserir_receitas = Button(frame_configuracao,command=inserir_receitas_b,image=img_add_receitas, text="Adicionar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE) #command=inserir_receitas_b, 
 botao_inserir_receitas.place(x=110, y=111)
 
-l_descricao = Label(frame_configuracao, text='Categoria', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4)
-l_descricao.place(x=10, y=160)
+l_info = Label(frame_configuracao, text='Categoria', height=1, anchor=NW, font=('Ivy 10 bold'), bg=co1, fg=co4) #l_descricao
+l_info.place(x=10, y=160)
 
 e_categoria= Entry(frame_configuracao, width=12, justify='left', relief='solid')
 e_categoria.place(x=110, y=160)
@@ -343,8 +537,11 @@ e_categoria.place(x=110, y=160)
 img_add_categoria = Image.open("adiciona.png")
 img_add_categoria = img_add_categoria.resize((17,17))
 img_add_categoria = ImageTk.PhotoImage(img_add_categoria)
-
 botao_inserir_categoria = Button(frame_configuracao,command=inserir_categoria_b, image=img_add_categoria, text="Adicionar".upper(), width=80, compound=LEFT, anchor=NW, font=('Ivy 7 bold'), bg=co1, fg=co0, overrelief=RIDGE)
 botao_inserir_categoria.place(x=110, y=190)
 
+'''percentagem()
+grafico_bar()
+resumo()
+grafico_pie()'''
 janela.mainloop()
